@@ -1,3 +1,5 @@
+package com.example.deadfishapp;
+
 public class Fish {
     private int mX;
     private int mY;
