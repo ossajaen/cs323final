@@ -1,11 +1,11 @@
-package com.example.deadfishapp;
+package com.example.mpf;
 
 public class Treasure {
-    //data members
+    //DATA MEMBERS
     private int mX;
     private int mY;
 
-    //setters and getters for treasure chest
+    //SETTERS AND GETTERS
     public int getX() {
         return mX;
     }

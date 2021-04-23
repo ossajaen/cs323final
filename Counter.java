@@ -1,6 +1,7 @@
-package com.example.deadfishapp;
+package com.example.mpf;
 
 public class Counter {
+
     //DATA MEMBERS
     private Integer mCount;
     private Double tCount;
@@ -11,13 +12,12 @@ public class Counter {
         tCount = 10.000;
     }
 
-    //SETTER AND GETTERs
-
-    public void setCount(int x){
+    //SETTER AND GETTERS
+    public void setCount(int x) {
         mCount = x;
     }
 
-    public void settCount(double x){
+    public void settCount(double x) {
         tCount = x;
     }
 
@@ -25,20 +25,22 @@ public class Counter {
         return mCount;
     }
 
-    public Double getTime(){
+    public Double getTime() {
         return tCount;
     }
-    
-    //modify timer directly
+
+    //ADD TO COUNTER
     public void addCount() { //found treasure means a point!
         mCount++;
     }
 
-    public void addTime(){ //foound treasure means more time!
+    //ADD TO TIMER
+    public void addTime() {
         tCount += .75;
     }
 
-    public void loseTime(){ //this code is now useless as we now use a proper handler that uses actual time
+    //LOSE FROM TIMER
+    public void loseTime() {
         tCount -= 0.0175;
     }
 }

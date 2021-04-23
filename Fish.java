@@ -1,13 +1,13 @@
-package com.example.deadfishapp;
+package com.example.mpf;
 
 public class Fish {
-    //data members
+
+    //DATA MEMBERS
     private int mX;
     private int mY;
-    private int mVelocity; //used to determine rate of change of fish position
-    
-    
-    //setters and getters for position and velocity
+    private int mVelocity; //FISH VELOCITY
+
+    //SETTERS AND GETTERS
     public void setVelocity(int velocity) {
         mVelocity = velocity;
     }
@@ -32,7 +32,7 @@ public class Fish {
         return mY - 300; //used pixel counts to align edges of image to center of image
     }
 
-    //actions: move fish from one position closer to finger
+    //MOVE FISH TO DESTINATION
     public void move(int destinationX, int destinationY) {
         int distX = destinationX - mX;
         int distY = destinationY - mY;

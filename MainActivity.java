@@ -1,4 +1,4 @@
-package com.example.deadfishapp;
+package com.example.mpf;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,13 +21,13 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
-    //instantiate all variables used later
+    //INSTANTIATE VARIABLES
     
-    //thread handlers
+    //THREAD HANDLERS
     private Thread calculateThread;
     private Thread doTimer;
 
-    //layouts and image views
+    //LAYOUT AND IMAGE VIEWS
     private RelativeLayout mainLayout;
     private ImageView fishImageView;
     private ImageView chestImageView;
@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView timeTextView;
     private TextView scoreTextView;
 
-    //classes
+    //CLASSES
     private Fish mFish;
     private Treasure mChest;
     private Counter count;
 
-    //subelements
+    //SUBELEMENTS
     private int xLocation;
     private int yLocation;
     private int highScore = 0;
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -56,21 +57,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
+        //CREATE FISH AND CHEST AT STARTING LOCATIONS
         xLocation = 270;
         yLocation = 480;
         buildFish();
         addChest();
 
+        //CREATE COUNTER
         count = new Counter();
+
+        //CREATE TEXT VIEWS
         countTextView = (TextView)findViewById(R.id.pointCounter);
-
         timeTextView = (TextView)findViewById(R.id.timer);
-
         scoreTextView = (TextView)findViewById((R.id.score));
 
+        //CREATE THREADS
         calculateThread = new Thread(calculateAction);
-
         doTimer = new Thread(trunnable);
+
+        //START TIMER THREAD
         doTimer.start();
     }
 
@@ -78,15 +83,18 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater layoutInflater;
         layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        //SET INITIAL POSITION AND VELOCITY FOR FISH
         int initialXPosition = xLocation;
         int intitialYPosition = yLocation;
-
         int proptionalVelocity = 20;
+
+        //CREATE FISH AT LOCATION WITH VELOCITY
         mFish = new Fish();
         mFish.setX(initialXPosition);
         mFish.setY(intitialYPosition);
         mFish.setVelocity(proptionalVelocity);
 
+        //ADD FISH TO LAYOUT
         fishImageView = (ImageView) layoutInflater.inflate(R.layout.fish_image, null);
         fishImageView.setX((float) mFish.getX());
         fishImageView.setY((float) mFish.getY());
@@ -97,16 +105,16 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater layoutInflater;
         layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        //SET RANDOM STARTING POSITION FOR CHEST
         int initialXPosition = (int) (Math.random()*((210 - (- 180)))) - 180;
         int initialYPosition = (int) (Math.random()*((470 - (-150)))) - 150;
 
-        //int initialXPosition = 50;
-        //int initialYPosition = 180;
-
+        //CREATE CHEST AT STARTING POSITION
         mChest = new Treasure();
         mChest.setX(initialXPosition);
         mChest.setY(initialYPosition);
 
+        //ADD CHEST TO LAYOUT
         chestImageView = (ImageView) layoutInflater.inflate(R.layout.treasure, null);
         chestImageView.setX((float) mChest.getX());
         chestImageView.setY((float) mChest.getY());
@@ -115,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
+        //START MOVE TO FINGER THREAD
         calculateThread.start();
         super.onResume();
     }
@@ -132,11 +142,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Runnable calculateAction = new Runnable() {
+
+        //SET DELAY FOR FINDER PRESS
         private static final int DELAY = 20;
         public void run() {
             try {
                 while(true) {
+
+                    //MOVE FISH TO FINDER LOCATION
                     mFish.move(xLocation, yLocation);
+
+                    //WAIT DELAY AMOUNT
                     Thread.sleep(DELAY);
                     threadHandler.sendEmptyMessage(0);
                 }
@@ -146,34 +162,44 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // Create the Handler object (on the main thread by default)
+    //CREATE TIMER HANDLER
     Handler timer = new Handler();
-    // Define the code block to be executed
     private Runnable trunnable = new Runnable() {
         @Override
         public void run() {
-            // Do something here on the main thread
-            DecimalFormat df = new DecimalFormat("###.###");
+
+            //REMOVE TIME FROM TIMER
             count.settCount(count.getTime() - 0.02);
+
+            //UPDATE TIMER TO 3 DECIMAL POINTS IN LAYOUT
+            DecimalFormat df = new DecimalFormat("###.###");
             timeTextView.setText(df.format(count.getTime()).toString());
+
+            //RESET SCORE WHEN TIMER RUNS OUT
             if (count.getTime() <= 0){
+
+                //UPDATE HIGH SCORE
                 if(count.getCount() > highScore){
                     highScore = count.getCount();
                     scoreTextView.setText("High Score: " + highScore);
                 }
+
                 countTextView.setText("0");
                 count.setCount(0);
                 timeTextView.setText("10");
                 count.settCount(10.000);
             }
-            // Repeat this the same runnable code block again another 2 seconds
-            // 'this' is referencing the Runnable object
+
+            //WAIT TO REMOVE TIME FROM TIMER
             timer.postDelayed(this, 2);
         }
     };
 
+    //CREATE MOVE TO FINGER HANDLER
     public Handler threadHandler = new Handler() {
         public void handleMessage (android.os.Message msg) {
+
+            //UPDATE FISH POSITION IN LAYOUT
             fishImageView.setX((float) mFish.getX());
             fishImageView.setY((float) mFish.getY());
         }
@@ -183,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onTouchEvent (MotionEvent event) {
         int touchAction = event.getActionMasked();
         switch (touchAction) {
+
+            //UPDATE FINGER LOCATION ON FINGER PRESS
             case MotionEvent.ACTION_DOWN:
                 xLocation = (int) event.getX();
                 yLocation = (int) event.getY();
@@ -196,27 +224,20 @@ public class MainActivity extends AppCompatActivity {
                 yLocation = (int) event.getY();
 
                 DecimalFormat df = new DecimalFormat("###.###");
-                //timeTextView.setText(df.format(count.getTime()).toString());
 
-                //count.loseTime();
-
-                //timeTextView.setText(df.format(count.getTime()).toString());
-
-                //double currenttime = count.getTime();
-
-                //double total = currenttime-(currenttime % 0.001);
-                //String total2 = String.valueOf(total);
-                //timeTextView.setText((total2));
-
+                //ADD TO TIMER AND SCORE WHEN FISH GETS TO CHEST
                 if (Math.abs(fishImageView.getX()-chestImageView.getX()) <= 100 && Math.abs(fishImageView.getY()-chestImageView.getY()) <= 50){
+
+                    //ADD TO COUNTER AND UPDATE IN LAYOUT
                     count.addCount();
                     countTextView.setText(count.getCount().toString());
 
+                    //ADD TO TIMER AND UPDATE IN LAYOUT
                     timeTextView.setText(df.format(count.getTime()).toString());
                     count.addTime();
                     timeTextView.setText(df.format(count.getTime()).toString());
 
-
+                    //MOVE CHEST TO NEW RANDOM POSITION
                     chestImageView.setY((int) (Math.random()*((470 - (-150)))) - 150);
                     chestImageView.setX((int) (Math.random()*((210 - (-180)))) - 180);
                 }
