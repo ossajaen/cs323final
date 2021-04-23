@@ -1,9 +1,10 @@
 package com.example.deadfishapp;
 
 public class Fish {
+    //data members
     private int mX;
     private int mY;
-    private int mVelocity;
+    private int mVelocity; //used to determine rate of change of fish position
 
     public void setVelocity(int velocity) {
         mVelocity = velocity;
