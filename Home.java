@@ -1,9 +1,11 @@
 package com.example.deadfishapp;
 
-public class Home {
+public class Treasure {
+    //data members
     private int mX;
     private int mY;
 
+    //setters and getters for treasure chest
     public int getX() {
         return mX;
     }
