@@ -22,11 +22,11 @@ public class Fish {
     }
 
     public int getX() {
-        return mX;
+        return mX - 240; //used pixel counts to align edges of image to center of image
     }
 
     public int getY() {
-        return mY;
+        return mY - 300; //used pixel counts to align edges of image to center of image
     }
 
     public void move(int destinationX, int destinationY) {
